@@ -1,0 +1,26 @@
+name: Feature or rule request
+description: Suggest a detection, a report improvement or a new capability.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: For a detection, describe the weakness and how it hurts an app's users.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: An example
+      description: A short vulnerable snippet and a safe one, or a public app that shows it. Say what a good finding would say.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to happen?
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Can you help?
+      options:
+        - label: I could send a pull request for this
