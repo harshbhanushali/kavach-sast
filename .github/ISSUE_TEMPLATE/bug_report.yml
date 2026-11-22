@@ -1,0 +1,48 @@
+name: Bug report
+description: The scan crashed, reported something wrong, or the console misbehaved.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Do not attach a real customer app or any credential.** For a security problem in Kavach SAST itself, use the private report in SECURITY.md instead of this form.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong?
+      options:
+        - A false positive (it reported something that is not a problem)
+        - A missed finding (a real weakness it did not report)
+        - The scan failed or hung
+        - The console or report looks wrong
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: The app (a public sample is ideal, with a download link), the platform, and the steps. For a finding, the rule id and the file it points to.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release or commit, from the console footer or `git rev-parse --short HEAD`.
+  - type: dropdown
+    id: how
+    attributes:
+      label: How are you running it?
+      options: [Docker, "npm (development)", "npm start (production)"]
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server log or `npm run doctor` output
+      render: text

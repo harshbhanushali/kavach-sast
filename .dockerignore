@@ -1,0 +1,16 @@
+.git
+.gitignore
+node_modules
+**/node_modules
+console/dist
+backend/data
+backend/test
+*.log
+.DS_Store
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md
+docs
+.github
+scripts

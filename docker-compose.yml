@@ -1,0 +1,64 @@
+# Kavach SAST, self-hosted. One service, one port, one volume.
+#
+#   cp .env.example .env             optional: set the admin password, limits, proxy
+#   docker compose up -d --build     start it   (or: npm run docker)
+#   docker compose logs -f           watch it (sign in as admin / kavach, then change the password)
+#   docker compose down              stop it (the data volume survives)
+#
+# Then open http://localhost:8788. See DEPLOYMENT.md before exposing it to others.
+
+services:
+  kavach-sast:
+    build: .
+    image: kavach-sast:latest
+    restart: unless-stopped
+    # A minimal init process, so SIGTERM reaches the app and finished child
+    # processes (a decompiler that outlives its scan) are reaped.
+    init: true
+    # Longer than KAVACH_SAST_SHUTDOWN_GRACE_SEC, so a scan that is running when
+    # the container is stopped is given time to finish before it is killed.
+    stop_grace_period: 90s
+    ports:
+      # Loopback only by default. To serve other machines, put a TLS proxy in
+      # front (deploy/docker-compose.proxy.yml) rather than publishing this.
+      - "${KAVACH_SAST_BIND:-127.0.0.1}:${KAVACH_SAST_PORT:-8788}:8788"
+    volumes:
+      # The database: scans, retained sources, triage decisions, accounts.
+      - kavach-sast-data:/data
+      # Scans stage a decompiled copy of the app under /tmp, which for a large
+      # app runs to several GB. A named volume keeps it off the container's
+      # writable layer and out of RAM.
+      - kavach-sast-tmp:/tmp
+    # The container is Chromium's sandbox (see the Dockerfile), so keep it tight.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Chromium's shared-memory use while rendering a long report.
+    shm_size: 512m
+    # A runaway scan should not take the host with it. Raise for very large apps.
+    mem_limit: ${KAVACH_SAST_MEMORY_LIMIT:-6g}
+    pids_limit: 1024
+    environment:
+      TZ: UTC
+      # Everything below is optional; see .env.example for what each does.
+      KAVACH_SAST_ADMIN_PASSWORD: ${KAVACH_SAST_ADMIN_PASSWORD:-}
+      KAVACH_SAST_TRUST_PROXY: ${KAVACH_SAST_TRUST_PROXY:-0}
+      KAVACH_SAST_HSTS: ${KAVACH_SAST_HSTS:-false}
+      KAVACH_SAST_MAX_SCANS: ${KAVACH_SAST_MAX_SCANS:-2}
+      KAVACH_SAST_MAX_QUEUE: ${KAVACH_SAST_MAX_QUEUE:-4}
+      KAVACH_SAST_SCAN_TIMEOUT_SEC: ${KAVACH_SAST_SCAN_TIMEOUT_SEC:-900}
+      KAVACH_SAST_REQUESTS_PER_MINUTE: ${KAVACH_SAST_REQUESTS_PER_MINUTE:-600}
+      KAVACH_SAST_LOGIN_FAILURES: ${KAVACH_SAST_LOGIN_FAILURES:-20}
+      KAVACH_SAST_RETENTION_DAYS: ${KAVACH_SAST_RETENTION_DAYS:-0}
+      KAVACH_SAST_SHUTDOWN_GRACE_SEC: ${KAVACH_SAST_SHUTDOWN_GRACE_SEC:-60}
+      KAVACH_SAST_LOG_LEVEL: ${KAVACH_SAST_LOG_LEVEL:-info}
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+volumes:
+  kavach-sast-data:
+  kavach-sast-tmp:

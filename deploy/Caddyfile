@@ -1,0 +1,21 @@
+# Caddy terminates TLS (and gets the certificate for you) and forwards to Kavach SAST.
+# Replace sast.example.com with your host name, which must resolve to this machine.
+sast.example.com {
+	# Large uploads and long scans: no request body cap, generous timeouts.
+	request_body {
+		max_size 700MB
+	}
+	reverse_proxy kavach-sast:8788 {
+		transport http {
+			response_header_timeout 20m
+			dial_timeout 10s
+		}
+		# A scan holds its request open; do not buffer the upload to disk first.
+		flush_interval -1
+	}
+	encode zstd gzip
+	log {
+		output stdout
+		format console
+	}
+}

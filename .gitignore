@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+backend/data/
+console/dist/
+.env
+backups/
+backend/test/

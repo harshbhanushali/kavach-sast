@@ -1,0 +1,322 @@
+@import 'tailwindcss';
+@import './theme-light.css';
+@import './theme-medium.css';
+
+/* `light:` styles an element only in the light theme. */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
+/*
+ * Design tokens.
+ *
+ * This console is read by someone deciding what protection ships in their app,
+ * often while comparing a check's false-positive risk against its value. That is
+ * reading work, so the type has to be comfortable and the secondary text has to
+ * be genuinely legible rather than decoratively dim.
+ *
+ * Contrast floors used here: body text >= 7:1 on the page background, secondary
+ * text >= 4.5:1, and nothing below 12px anywhere.
+ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Surfaces, from page back to raised. Warm near-black, the Kavach ground. */
+  --color-canvas: #0c0709;
+  --color-surface: #140c10;
+  --color-raised: #1b1116;
+  --color-hairline: #2e2025;
+  --color-hairline-strong: #43323a;
+  --color-hover-line: #5a4650;
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.35);
+
+  /* Text, from primary down. `muted` is the floor: nothing dimmer than this. */
+  --color-ink: #fbf3f4;
+  --color-ink-soft: #dccfd3;
+  --color-muted: #a99ba0;
+
+  --color-accent: #fb923c;
+  --color-accent-strong: #f97316;
+
+  /*
+   * Tailwind's slate is cool blue-grey. Kavach is warm, so the whole neutral
+   * scale is redefined here and every screen follows without a class changing.
+   */
+  --color-slate-50: #faf7f7;
+  --color-slate-100: #f3eeef;
+  --color-slate-200: #e6dde0;
+  --color-slate-300: #d1c5c9;
+  --color-slate-400: #a99ba0;
+  --color-slate-500: #7d6e73;
+  --color-slate-600: #5a4c51;
+  --color-slate-700: #43363b;
+  --color-slate-800: #2c2126;
+  --color-slate-900: #1d1418;
+  --color-slate-950: #110a0d;
+
+  /* Ember: the brand accent for actions, links, focus and progress. */
+  --color-ember-50: #fff7ed;
+  --color-ember-100: #ffedd5;
+  --color-ember-200: #fed7aa;
+  --color-ember-300: #fdba74;
+  --color-ember-400: #fb923c;
+  --color-ember-500: #f97316;
+  --color-ember-600: #c2410c;
+  --color-ember-700: #9a3412;
+  --color-ember-800: #7c2d12;
+  --color-ember-900: #5a2410;
+  --color-ember-950: #3a1608;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    /* 15px base: the grid is dense, and 14 was too tight to scan comfortably. */
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
+    line-height: 1.55;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+    font-feature-settings: normal;
+  }
+
+  /* Form controls: the platform defaults are small and low-contrast on dark. */
+  input[type='checkbox'] {
+    accent-color: var(--color-accent-strong);
+    width: 1.05rem;
+    height: 1.05rem;
+    cursor: pointer;
+  }
+
+  select, input[type='text'], input[type='number'], textarea {
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    border: 1px solid var(--color-hairline-strong);
+    border-radius: 0.375rem;
+    padding: 0.35rem 0.55rem;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  select:hover, input:hover, textarea:hover {
+    border-color: var(--color-hover-line);
+  }
+
+  select:focus-visible, input:focus-visible, textarea:focus-visible,
+  button:focus-visible, a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: transparent;
+  }
+
+  select:disabled, input:disabled, textarea:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-hairline-strong);
+    border-radius: 6px;
+    border: 2px solid var(--color-canvas);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-slate-600); }
+}
+
+@layer components {
+  /* One place to change how a panel looks. */
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-hairline);
+    border-radius: 0.625rem;
+    box-shadow: var(--shadow-panel);
+  }
+
+  .panel-header {
+    border-bottom: 1px solid var(--color-hairline);
+    padding: 0.9rem 1.15rem;
+  }
+
+  .panel-body { padding: 1.15rem; }
+
+  /* Section eyebrow: small, but tracked out so it stays readable. */
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 0.3rem;
+    border-width: 1px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+
+  .check-row {
+    transition: background-color 120ms ease;
+  }
+  .check-row:hover { background: var(--color-raised); }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  /*
+   * Fades the bottom edge of a scrollable list. Without it a fixed-height list
+   * clips through the middle of a row, which reads as a rendering bug rather
+   * than as "there is more below".
+   */
+  .scroll-fade {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 1.75rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.75rem), transparent 100%);
+  }
+}
+
+@layer components {
+  /*
+   * Kavach hero. Ember and gold on near-black. Every animation is decorative and
+   * is switched off under prefers-reduced-motion.
+   */
+  .k-hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #3a1a22;
+    border-radius: 0.9rem;
+    padding: 2.25rem 2.25rem 1.75rem;
+    background:
+      radial-gradient(60% 120% at 12% 20%, rgb(190 18 60 / 0.22), transparent 62%),
+      radial-gradient(50% 90% at 92% 0%, rgb(249 115 22 / 0.12), transparent 60%),
+      linear-gradient(180deg, #12080c, #0c0709 70%);
+  }
+  /* A faint mandala of concentric rings behind everything, felt more than seen. */
+  .k-hero::before {
+    content: '';
+    position: absolute;
+    inset: -40% auto -40% -10%;
+    width: 70%;
+    background: repeating-radial-gradient(circle at 30% 50%, transparent 0 22px, rgb(252 211 77 / 0.045) 22px 23px);
+    mask-image: radial-gradient(circle at 30% 50%, #000, transparent 70%);
+    pointer-events: none;
+  }
+  .k-hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 2.75rem;
+  }
+  .k-orbit { position: relative; width: 300px; height: 300px; display: grid; place-items: center; }
+  .k-orbit svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .k-orbit .k-mark { position: relative; filter: drop-shadow(0 6px 22px rgb(225 29 72 / 0.45)); animation: k-glow 5s ease-in-out infinite; }
+  .k-ring { fill: none; transform-box: fill-box; transform-origin: center; }
+  .k-ring-1 { stroke: #fb7185; stroke-opacity: .55; stroke-width: 1.2; stroke-dasharray: 3 9; animation: k-spin 40s linear infinite; }
+  .k-ring-2 { stroke: #fcd34d; stroke-opacity: .45; stroke-width: 1; stroke-dasharray: 1.5 6; animation: k-spin 28s linear infinite reverse; }
+  .k-ring-3 { stroke: #f97316; stroke-opacity: .5; stroke-width: 1.4; }
+  .k-sat { transform-box: view-box; transform-origin: 130px 130px; fill: #fcd34d; }
+  .k-sat-1 { transform-origin: 130px 130px; animation: k-orbit 14s linear infinite; }
+  .k-sat-2 { fill: #fb7185; transform-origin: 130px 130px; animation: k-orbit 9s linear infinite reverse; }
+
+  .k-eyebrow {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.26em; color: #fcd34d;
+  }
+  .k-title {
+    margin-top: 0.6rem;
+    font-size: clamp(2rem, 4.4vw, 3.7rem);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #fff1f2;
+  }
+  .k-title-accent {
+    background: linear-gradient(90deg, #fcd34d, #fb923c 45%, #fb7185);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .k-lede { margin-top: 1rem; max-width: 44rem; font-size: 1.05rem; line-height: 1.6; color: #d6c3c8; }
+
+  .k-journey {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.6rem;
+    list-style: none;
+    padding: 0;
+  }
+  .k-stage { position: relative; }
+  .k-stage-btn {
+    display: flex; flex-direction: column; gap: 0.3rem; width: 100%; height: 100%;
+    text-align: left; cursor: pointer;
+    padding: 0.85rem 0.95rem 0.95rem;
+    border-radius: 0.7rem;
+    border: 1px solid #3a1f27;
+    background: rgb(20 10 14 / 0.75);
+    transition: border-color .2s, background .2s, transform .2s;
+  }
+  .k-stage-btn:hover { border-color: #f97316; background: rgb(40 16 20 / 0.9); transform: translateY(-1px); }
+  .k-stage-btn:focus-visible { outline: 2px solid #fcd34d; outline-offset: 2px; }
+  .k-stage-top { display: flex; align-items: center; gap: 0.5rem; }
+  .k-stage-icon {
+    display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 0.5rem;
+    background: rgb(251 113 133 / 0.13); color: #fda4af; border: 1px solid rgb(251 113 133 / 0.3);
+  }
+  .k-stage-n { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; color: #8f7a80; font-variant-numeric: tabular-nums; }
+  .k-stage-tag {
+    margin-left: auto; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.12rem 0.45rem; border-radius: 999px; border: 1px solid #4a2b33; color: #b9a3a9;
+  }
+  .k-stage-title { margin-top: 0.15rem; font-size: 1.1rem; font-weight: 700; color: #fff1f2; }
+  .k-stage-detail { font-size: 0.8rem; line-height: 1.45; color: #c4aeb4; }
+  .k-done .k-stage-tag { color: #6ee7b7; border-color: rgb(52 211 153 / 0.4); background: rgb(52 211 153 / 0.08); }
+  .k-done .k-stage-icon { color: #6ee7b7; background: rgb(52 211 153 / 0.1); border-color: rgb(52 211 153 / 0.35); }
+  .k-current .k-stage-btn { border-color: #f97316; box-shadow: 0 0 0 1px rgb(249 115 22 / 0.4), 0 8px 30px -12px rgb(249 115 22 / 0.5); }
+  .k-current .k-stage-tag { color: #fed7aa; border-color: #f97316; background: rgb(249 115 22 / 0.14); }
+  .k-blocked .k-stage-tag { color: #fecaca; border-color: #ef4444; background: rgb(239 68 68 / 0.12); }
+
+  /* The path between stages, with an ember travelling along it. */
+  .k-link { position: absolute; top: 2.05rem; right: -0.75rem; width: 0.75rem; height: 2px; background: #4a2b33; overflow: hidden; z-index: 1; }
+  .k-link::after { content: ''; position: absolute; inset: 0 auto 0 -40%; width: 40%; background: linear-gradient(90deg, transparent, #fb923c); animation: k-travel 2.6s linear infinite; }
+
+  @keyframes k-spin { to { transform: rotate(360deg); } }
+  @keyframes k-orbit { to { transform: rotate(360deg); } }
+  @keyframes k-glow { 0%, 100% { filter: drop-shadow(0 6px 18px rgb(225 29 72 / 0.35)); } 50% { filter: drop-shadow(0 6px 28px rgb(249 115 22 / 0.6)); } }
+  @keyframes k-travel { to { left: 100%; } }
+
+  @media (max-width: 900px) {
+    .k-hero-grid { grid-template-columns: 1fr; justify-items: start; gap: 1rem; }
+    .k-orbit { width: 200px; height: 200px; }
+    .k-journey { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .k-link { display: none; }
+  }
+  @media (max-width: 520px) {
+    .k-journey { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .k-ring, .k-sat, .k-orbit .k-mark, .k-link::after { animation: none; }
+    .k-stage-btn { transition: none; }
+  }
+}

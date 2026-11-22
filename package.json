@@ -1,0 +1,34 @@
+{
+  "name": "kavach-sast",
+  "description": "Kavach SAST: static analysis for Android and iOS apps — a report you can hand over.",
+  "keywords": [
+    "kavach",
+    "mobile-security",
+    "sast",
+    "static-analysis",
+    "android",
+    "ios"
+  ],
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "workspaces": [
+    "backend",
+    "console"
+  ],
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "backend": "npm run start -w kavach-sast-backend",
+    "console": "npm run dev -w kavach-sast-console",
+    "doctor": "node --experimental-strip-types tools/doctor.ts",
+    "docker": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "start": "NODE_ENV=production npm run start -w kavach-sast-backend",
+    "build": "npm run build -w kavach-sast-console",
+    "typecheck": "tsc --noEmit -p console",
+    "backup": "node --experimental-strip-types tools/backup.ts"
+  }
+}

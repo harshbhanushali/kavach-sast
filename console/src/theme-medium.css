@@ -1,0 +1,29 @@
+/*
+ * Medium theme: the dark layout on a lifted, warm grey ground, for people who
+ * find near-black too stark and white too bright. Only the dark end of each
+ * scale moves; text and accent shades are unchanged, so every contrast the dark
+ * theme guarantees still holds (body text stays above 7:1 here).
+ */
+:root[data-theme='medium'] {
+  color-scheme: dark;
+
+  --color-canvas: #2a2125;
+  --color-surface: #342a2f;
+  --color-raised: #3e3338;
+  --color-hairline: #4c3f46;
+  --color-hairline-strong: #63545c;
+  --color-hover-line: #7a6a73;
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.25);
+
+  --color-ink: #fbf3f4;
+  --color-ink-soft: #e3d8db;
+  --color-muted: #c0b3b8;
+
+  --color-slate-400: #beb1b6;
+  --color-slate-500: #a09298;
+  --color-slate-600: #85777d;
+  --color-slate-700: #62545b;
+  --color-slate-800: #4a3e44;
+  --color-slate-900: #382e33;
+  --color-slate-950: #2a2125;
+}

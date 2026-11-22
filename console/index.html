@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kavach SAST — Static analysis for mobile apps</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="Kavach SAST: scan an Android or iOS artifact and get a report you can hand over." />
+    <meta name="theme-color" content="#0c0709" />
+    <script>
+      // Pick the theme before the first paint so a light page never flashes dark. Mirrors src/theme.ts.
+      (function () {
+        var t = null;
+        try { var v = localStorage.getItem('kavach.theme'); if (v === 'light' || v === 'medium' || v === 'dark') t = v; } catch (e) {}
+        if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

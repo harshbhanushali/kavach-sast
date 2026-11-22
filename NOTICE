@@ -1,0 +1,62 @@
+Kavach SAST
+===========
+
+Copyright 2026 Harsh Bhanushali
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This file credits the third-party material the project uses or distributes, and
+states the licence each part is under.
+
+Exodus Privacy tracker database  (backend/src/sast/trackerData.ts)
+-------------------------------------------------------------------
+The list of tracker names and code signatures in backend/src/sast/trackerData.ts
+is generated from the Exodus Privacy tracker database, https://exodus-privacy.eu.org
+(https://reports.exodus-privacy.eu.org/api/trackers).
+
+  The database is made available under the Open Database License (ODbL) 1.0,
+  https://opendatacommons.org/licenses/odbl/1-0/, and its individual contents
+  under the Database Contents License (DbCL) 1.0.
+
+That file is a derived database and stays under the ODbL, whatever licence the
+rest of the project carries. Reports that list trackers say where the signatures
+come from. The unmodified data is available from the address above.
+
+Fonts  (shipped in the console build)
+-------------------------------------
+Inter (copyright The Inter Project Authors) and JetBrains Mono (copyright The JetBrains Mono
+Project Authors) are distributed under the SIL Open Font License 1.1, https://openfontlicense.org.
+The full texts are in the font packages (node_modules/@fontsource/*/LICENSE).
+
+Standards and public references
+-------------------------------
+Findings carry identifiers from MITRE CWE and the OWASP Mobile Application Security
+Verification Standard (MASVS) and Mobile Top 10. Only identifiers and names are used.
+OWASP MASVS and MASTG are published under CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/.
+
+Secret formats
+--------------
+Many services issue tokens in a fixed, public format, so a pattern for one is the
+same whoever writes it. Some of the patterns in backend/src/sast/secretFormats.ts are
+identical to those in gitleaks (https://github.com/gitleaks/gitleaks, MIT licence,
+Copyright (c) 2019 Zachary Rice).
+
+npm dependencies
+----------------
+The server and console depend on Fastify and its plugins, zod, React and the Fontsource
+font packages, all under MIT, ISC, BSD or similar permissive licences. Their licences
+are in the packages themselves (node_modules/<package>/LICENSE). Build-only tools
+(Vite, TypeScript, Tailwind CSS) are not distributed with a build.
+
+Tools the container image installs
+----------------------------------
+The Dockerfile downloads, at build time, apktool, jadx and qpdf (Apache-2.0), a Temurin
+JDK (GPLv2 with the Classpath Exception), Chromium (BSD and bundled third-party
+licences) and apksigner from the Android build-tools (Apache-2.0). They are not part of
+this repository. If you publish a built image, include the licences and notices of these
+components with it, and check the Android SDK terms for apksigner.
+
+Trademarks
+----------
+Exodus Privacy, OWASP, gitleaks and the other names above belong to their owners. They
+are mentioned to credit a source and do not imply endorsement.

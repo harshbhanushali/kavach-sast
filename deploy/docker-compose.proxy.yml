@@ -1,0 +1,34 @@
+# Kavach SAST behind Caddy, which serves HTTPS with an automatic certificate.
+#
+#   cp .env.example .env     and set, at least:
+#       KAVACH_SAST_TRUST_PROXY=1
+#       KAVACH_SAST_HSTS=true
+#   edit deploy/Caddyfile    (your host name)
+#   docker compose -f docker-compose.yml -f deploy/docker-compose.proxy.yml up -d --build
+#
+# Ports 80 and 443 must reach this machine for the certificate to be issued.
+# Kavach SAST itself stays unpublished: only the proxy can reach it.
+
+services:
+  kavach-sast:
+    ports: !reset []
+    expose:
+      - "8788"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      kavach-sast:
+        condition: service_healthy
+
+volumes:
+  caddy-data:
+  caddy-config:
